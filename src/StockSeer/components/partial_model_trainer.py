@@ -44,6 +44,6 @@ class PartialModelTrainer:
         lr_callback = ReduceLROnPlateau(monitor='loss', factor=0.2, patience=2) 
         # Train the model
         logger.info("partial model training started")
-        lstm_model.fit(X_train, y_train, epochs=1, batch_size=32, callbacks=[lr_callback])
+        lstm_model.fit(X_train, y_train, epochs=25, batch_size=32, callbacks=[lr_callback])
         lstm_model.save(self.config.partial_model_name)
         logger.info(f"partial model trainned and save at {self.config.partial_model_name}")

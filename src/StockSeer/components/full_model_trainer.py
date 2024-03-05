@@ -20,7 +20,7 @@ class FullModelTrainer:
         lr_callback = ReduceLROnPlateau(monitor='loss', factor=0.2, patience=2) 
         # Train the model
         logger.info("full model training started")
-        model.fit(X, y, epochs=1, batch_size=32, callbacks=[lr_callback])
+        model.fit(X, y, epochs=5, batch_size=32, callbacks=[lr_callback])
         model.save(self.config.final_model_name)
         logger.info(f"full model trainned and save at {self.config.final_model_name}")
     
