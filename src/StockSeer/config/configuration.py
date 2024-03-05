@@ -1,6 +1,6 @@
 from src.StockSeer.constants import *
 from src.StockSeer.utils.common import read_yaml, create_directories
-from src.StockSeer.entity.config_entity import DataIngestionConfig, DataValidationConfig,DataTransformationConfig
+from src.StockSeer.entity.config_entity import DataIngestionConfig, DataValidationConfig,DataTransformationConfig,PartialModelTrainerConfig,ModelEvaluationConfig
 
 
 class ConfigurationManager:
@@ -58,7 +58,38 @@ class ConfigurationManager:
         data_transformation_config = DataTransformationConfig(
             root_dir=config.root_dir,
             data_path=config.data_path,
-            scaled_data_file=config.scaled_data_file
+            scaled_data_file=config.scaled_data_file,
+            scaler_file_path=config.scaler_file_path
         )
 
         return data_transformation_config
+    
+    def get_partial_model_trainer_config(self) -> PartialModelTrainerConfig:
+        config = self.config.partial_model_trainer
+
+        create_directories([config.root_dir])
+
+        partial_model_trainer_config = PartialModelTrainerConfig(
+            root_dir=config.root_dir,
+            X_train_data_path = config.X_train_data_path,
+            y_train_data_path = config.y_train_data_path,
+            partial_model_name = config.partial_model_name
+        )
+
+        return partial_model_trainer_config
+    
+    def get_model_evaluation_config(self) -> ModelEvaluationConfig:
+        config = self.config.model_evaluation
+
+        create_directories([config.root_dir])
+
+        model_evaluation_config = ModelEvaluationConfig(
+            root_dir = config.root_dir,
+            X_test_data_path = config.X_test_data_path,
+            y_test_data_path = config.y_test_data_path,
+            model_path =config.model_path,
+            scaler_file_path=config.scaler_file_path,
+            metric_file_name=config.metric_file_name
+        )
+
+        return model_evaluation_config

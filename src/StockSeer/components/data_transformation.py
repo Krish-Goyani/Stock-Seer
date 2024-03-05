@@ -4,6 +4,7 @@ from src.StockSeer.logging import logger
 import numpy as np
 from src.StockSeer.config.configuration import DataTransformationConfig
 import os
+from joblib import dump
 
 class DataTransformation:
     def __init__(self, config: DataTransformationConfig):
@@ -25,7 +26,7 @@ class DataTransformation:
         X_test = np.reshape(X_test, (X_test.shape[0], X_test.shape[1], 1 ))
 
         np.save(os.path.join(self.config.root_dir,"X_test.npy"),X_test)
-        np.save(os.path.join(self.config.root_dir,"y_test.npy"),y_test)
+        np.save(os.path.join(self.config.root_dir,"y_test.npy"),y_test.values)
         logger.info("test data stacking completed")
 
 
@@ -59,6 +60,7 @@ class DataTransformation:
         logger.info(f"data scaling completed and shape of data : {scaled_data.shape}")
         np.save(self.config.scaled_data_file,scaled_data)
         logger.info(f"scaled data stored at {self.config.scaled_data_file}")
+        dump(scaler,self.config.scaler_file_path)
         return scaled_data
 
     def DataTransformation(self):
@@ -71,8 +73,12 @@ class DataTransformation:
         if test_data_len > 200:
             test_data_len = 200
         train_data_len = len(scaled_data) - test_data_len
+        logger.info(f"length of train data is {train_data_len}")
+        logger.info(f"length of test data is {test_data_len}")
 
         self.TrainDataStacking(scaled_data,train_data_len)
         self.TestDataStacking(scaled_data,train_data_len,data)
+
+        
 
         

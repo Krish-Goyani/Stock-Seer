@@ -17,7 +17,6 @@ class DataIngestion:
         logger.info(f"{self.config.ticker}'s data downloaded")
 
         data = data.filter(['Close'])
-        data = data[::-1]
         # Set filename 
         filename = 'data.csv'
         filepath = os.path.join(self.config.local_data_file, filename)
