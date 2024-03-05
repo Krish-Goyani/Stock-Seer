@@ -9,6 +9,24 @@ from joblib import dump
 class DataTransformation:
     def __init__(self, config: DataTransformationConfig):
         self.config = config
+    def WholeDataStacking(self,scaled_data):
+        train_data = scaled_data
+        # Split the data into x_train and y_train data sets
+        X_stacked = []
+        y_stacked = []
+
+        for i in range(100, len(scaled_data)):
+            X_stacked.append(train_data[i-100:i, 0])
+            y_stacked.append(train_data[i, 0])
+
+        # Convert the x_train and y_train to numpy arrays 
+        X_stacked, y_stacked = np.array(X_stacked), np.array(y_stacked)
+
+        # Reshape the data
+        X_stacked = np.reshape(X_stacked, (X_stacked.shape[0], X_stacked.shape[1], 1))
+        np.save(os.path.join(self.config.root_dir,"X_stacked.npy"),X_stacked)
+        np.save(os.path.join(self.config.root_dir,"y_stacked.npy"),y_stacked)
+        logger.info("whole data stacking completed")
 
     def TestDataStacking(self,scaled_data,training_data_len,df):
 
@@ -57,9 +75,8 @@ class DataTransformation:
         logger.info("data scaling started")
         scaler = StandardScaler()
         scaled_data = scaler.fit_transform(data)
-        logger.info(f"data scaling completed and shape of data : {scaled_data.shape}")
         np.save(self.config.scaled_data_file,scaled_data)
-        logger.info(f"scaled data stored at {self.config.scaled_data_file}")
+        logger.info(f"data scaling completed and shape of data : {scaled_data.shape} and store at {self.config.scaled_data_file}")
         dump(scaler,self.config.scaler_file_path)
         return scaled_data
 
@@ -78,6 +95,7 @@ class DataTransformation:
 
         self.TrainDataStacking(scaled_data,train_data_len)
         self.TestDataStacking(scaled_data,train_data_len,data)
+        self.WholeDataStacking(scaled_data)
 
         
 

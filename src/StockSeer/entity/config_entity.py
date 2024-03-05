@@ -39,3 +39,11 @@ class ModelEvaluationConfig:
     model_path:Path
     scaler_file_path:Path
     metric_file_name: Path
+
+@dataclass(frozen=True)
+class FullModelTrainerConfig:
+    root_dir: Path
+    X_stacked_data_path: Path
+    y_stacked_data_path: Path
+    partial_model_name: str
+    final_model_name: str
