@@ -5,6 +5,7 @@ from src.StockSeer.pipeline.prediction import PredictionPipeline
 import plotly.express as px
 import numpy as np
 import pandas as pd
+from pathlib import Path
 
 # Set Streamlit page configuration
 st.set_page_config(
@@ -25,13 +26,13 @@ with st.form(key="prediction_form",clear_on_submit=True):
 
 if submitted:
   
-    with open('config\config.yaml', 'r') as file:
+    with open(Path('config\config.yaml'), 'r') as file:
         config = yaml.safe_load(file)
 
     config['data_ingestion']['ticker'] = ticker
 
     # Write the updated YAML file
-    with open('config\config.yaml', 'w') as file:
+    with open(Path('config\config.yaml'), 'w') as file:
         yaml.dump(config, file)
     
     os.system("python main.py")
